@@ -85,6 +85,11 @@ bool IsGraphingModeEnabled()
         return _isGraphingModeEnabledCached->Value;
     }
 
+    auto policyData = Windows::Management::Policies::NamedPolicy::GetPolicyFromPath(
+        L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Calculator", L"AllowGraphingCalculator");
+
+    auto boolvalue = policyData->GetBoolean();
+
     DWORD allowGraphingCalculator{ 0 };
     DWORD bufferSize{ sizeof(allowGraphingCalculator) };
     // Make sure to call RegGetValueW only on Windows 10 1903+
