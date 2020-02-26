@@ -88,14 +88,15 @@ bool IsGraphingModeEnabled()
     DWORD allowGraphingCalculator{ 0 };
     DWORD bufferSize{ sizeof(allowGraphingCalculator) };
     // Make sure to call RegGetValueW only on Windows 10 1903+
-    if (RegGetValueW(
-            HKEY_CURRENT_USER,
-            L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Calculator",
-            L"AllowGraphingCalculator",
-            RRF_RT_DWORD, // RRF_RT_DWORD == RRF_RT_REG_DWORD | RRF_RT_REG_BINARY
-            nullptr,
-            reinterpret_cast<LPBYTE>(&allowGraphingCalculator),
-            &bufferSize)
+    auto hr = RegGetValueW(
+        HKEY_USERS,
+        L"S-1-12-1-2588692110-1235712265-186623659-3171403637\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Calculator",
+        L"AllowGraphingCalculator",
+        RRF_RT_DWORD, // RRF_RT_DWORD == RRF_RT_REG_DWORD | RRF_RT_REG_BINARY
+        nullptr,
+        reinterpret_cast<LPBYTE>(&allowGraphingCalculator),
+        &bufferSize);
+    if (hr
         == ERROR_SUCCESS)
     {
         _isGraphingModeEnabledCached = allowGraphingCalculator != 0;
