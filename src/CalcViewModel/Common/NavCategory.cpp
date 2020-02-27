@@ -85,10 +85,8 @@ bool IsGraphingModeEnabled()
         return _isGraphingModeEnabledCached->Value;
     }
 
-    auto policyData = Windows::Management::Policies::NamedPolicy::GetPolicyFromPath(
-        L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Calculator", L"AllowGraphingCalculator");
-
-    auto boolvalue = policyData->GetBoolean();
+    auto policyData = Windows::Management::Policies::NamedPolicy::GetPolicyFromPath(L"Education", L"AllowGraphingCalculator");
+    auto policyValue = policyData->GetInt32();
 
     DWORD allowGraphingCalculator{ 0 };
     DWORD bufferSize{ sizeof(allowGraphingCalculator) };
@@ -101,8 +99,7 @@ bool IsGraphingModeEnabled()
         nullptr,
         reinterpret_cast<LPBYTE>(&allowGraphingCalculator),
         &bufferSize);
-    if (hr
-        == ERROR_SUCCESS)
+    if (hr == ERROR_SUCCESS)
     {
         _isGraphingModeEnabledCached = allowGraphingCalculator != 0;
     }
