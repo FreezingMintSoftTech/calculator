@@ -64,6 +64,9 @@ extern "C"
             _Post_z_) _When_((dwFlags & 0x7F) == RRF_RT_REG_MULTI_SZ || *pdwType == REG_MULTI_SZ, _Post_ _NullNull_terminated_)
             _Out_writes_bytes_to_opt_(*pcbData, *pcbData) PVOID pvData,
         _Inout_opt_ LPDWORD pcbData);
+
+    WINADVAPI LSTATUS APIENTRY
+    RegOpenKeyExW(_In_ HKEY hKey, _In_opt_ LPCWSTR lpSubKey, _In_opt_ DWORD ulOptions, _In_ REGSAM samDesired, _Out_ PHKEY phkResult);
 }
 
 bool IsGraphingModeAvailable()
@@ -85,27 +88,34 @@ bool IsGraphingModeEnabled()
         return _isGraphingModeEnabledCached->Value;
     }
 
-    auto policyData = Windows::Management::Policies::NamedPolicy::GetPolicyFromPath(L"Education", L"AllowGraphingCalculator");
-    auto policyValue = policyData->GetInt32();
+    // auto policyData = Windows::Management::Policies::NamedPolicy::GetPolicyFromPath(L"Education", L"AllowGraphingCalculator");
+    // auto policyValue = policyData->GetInt32();
+
+    //_isGraphingModeEnabledCached = policyValue != 0;
 
     DWORD allowGraphingCalculator{ 0 };
     DWORD bufferSize{ sizeof(allowGraphingCalculator) };
     // Make sure to call RegGetValueW only on Windows 10 1903+
-    auto hr = RegGetValueW(
-        HKEY_USERS,
-        L"S-1-12-1-2588692110-1235712265-186623659-3171403637\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Calculator",
-        L"AllowGraphingCalculator",
-        RRF_RT_DWORD, // RRF_RT_DWORD == RRF_RT_REG_DWORD | RRF_RT_REG_BINARY
-        nullptr,
-        reinterpret_cast<LPBYTE>(&allowGraphingCalculator),
-        &bufferSize);
-    if (hr == ERROR_SUCCESS)
+    HKEY key = NULL;
+    auto hrOpen = RegOpenKeyExW(HKEY_CURRENT_USER, L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion", 0, KEY_READ, &key);
+    if (hrOpen == ERROR_SUCCESS || hrOpen != ERROR_SUCCESS)
     {
-        _isGraphingModeEnabledCached = allowGraphingCalculator != 0;
-    }
-    else
-    {
-        _isGraphingModeEnabledCached = true;
+        auto hr = RegGetValueW(
+            HKEY_CURRENT_USER,
+            L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Calculator",
+            L"AllowGraphingCalculator",
+            RRF_RT_DWORD, // RRF_RT_DWORD == RRF_RT_REG_DWORD | RRF_RT_REG_BINARY
+            nullptr,
+            reinterpret_cast<LPBYTE>(&allowGraphingCalculator),
+            &bufferSize);
+        if (hr == ERROR_SUCCESS)
+        {
+            _isGraphingModeEnabledCached = allowGraphingCalculator != 0;
+        }
+        else
+        {
+            _isGraphingModeEnabledCached = true;
+        }
     }
     return _isGraphingModeEnabledCached->Value;
 }
