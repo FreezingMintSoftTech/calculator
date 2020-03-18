@@ -4286,4 +4286,54 @@
     <value>Select All</value>
     <comment>Select all menu item from the Equation TextBox</comment>
   </data>
+    <data name="KGFEquationTextBox.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Function Input Textbox</value>
+    <comment>The automation name for the KGFEquationTextBox that is shown when Calculator is in graphing mode.</comment>
+  </data>
+    <data name="inequalityButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Inequalities Button</value>
+    <comment>The automation name for the button that contains a flyout for the inequality functions.</comment>
+  </data>
+    <data name="funcButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Functions Button</value>
+    <comment>The automation name for the button that contains a flyout for the inequality functions.</comment>
+  </data>
+
+    <!--LessThanFlyoutButton
+    LessThanOrEqualFlyoutButton
+    EqualsFlyoutButton
+    GreaterThanOrEqualFlyoutButton
+    GreaterThanFlyoutButton
+    AbsFlyoutButton
+
+
+FloorButton
+    CeilButton
+    trigButton
+    TrigShiftButton
+    HypButton
+    SinButton
+    CosButton
+    TanButton
+    SecButton
+    CscButton
+    CotButton
+    InvsinButton
+    InvcosButton
+    InvtanButton
+    InvsecButton
+    InvcscButton
+    InvcotButton
+    SinhButton
+    CoshButton
+    TanhButton
+    SechButton
+    CschButton
+    CothButton
+    InvsinhButton
+    InvcoshButton
+    InvtanhButton
+    InvsechButton
+    InvcschButton-->
+
 </root>
